@@ -1,146 +1,470 @@
-# Intelligent Energy Consumption Forecasting for Smart Buildings (EnergiSense AI)
+# Intelligent Energy Consumption Forecasting for Smart Buildings
+### EnergiSense AI — Machine Learning and Explainable AI for Energy Intelligence
 
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
-[![LightGBM](https://img.shields.io/badge/LightGBM-Champion_Model-brightgreen.svg)](https://lightgbm.readthedocs.io/)
-[![SHAP](https://img.shields.io/badge/Explainable_AI-TreeSHAP-orange.svg)](https://shap.readthedocs.io/)
-[![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit_1.30+-red.svg)](https://streamlit.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Forecasting-green)
+![LightGBM](https://img.shields.io/badge/Model-LightGBM-brightgreen)
+![Explainable AI](https://img.shields.io/badge/Explainable%20AI-SHAP-orange)
+![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-red)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-An enterprise-grade, end-to-end Machine Learning and Explainable AI system for predictive electricity consumption forecasting across multi-facility university campuses and commercial buildings. Built using the UNICON Smart Building Energy & Utilities dataset.
+## 1. Project Overview
 
----
+**EnergiSense AI** is a machine learning-based energy forecasting and analytics platform designed to help universities and commercial buildings understand, predict, and optimize electricity consumption.
 
-## 📌 Executive Summary & Problem Formulation
+The system analyzes historical electricity usage, weather conditions, time-based patterns, and building operating schedules to forecast future energy demand. An interactive Streamlit dashboard presents consumption trends, forecast results, model comparisons, and explainable AI insights.
 
-- **Prediction Target**: Hourly Electricity Consumption ($kWh/h$).
-- **Prediction Interval**: 1 Hour.
-- **Forecast Horizon**: 24-Hour Day-Ahead horizon (with dynamic 12h, 48h, 72h, and 168h multi-horizon support).
-- **Facility Portfolio**: 64 building meters across 3 multi-zone university campuses (Bundoora, Albury-Wodonga, Bendigo).
-- **Champion Model**: LightGBM Gradient Boosted Decision Trees achieving an **$R^2$ of 0.9371** and **MAE of 6.33 kWh** on an out-of-sample forward test set.
-- **Explainability**: Integrated game-theoretic **TreeSHAP** for global feature attribution, directional beeswarm plots, thermal sensitivity curves, and local prediction waterfall decompositions.
+The project aims to support data-driven energy management, improve demand planning, identify unusual consumption patterns, and help facility managers investigate potential energy optimization opportunities.
 
----
+## 2. Problem Statement
 
-## 🏗️ End-to-End Workflow: All 17 Lifecycle Steps
+Buildings consume electricity throughout the day for lighting, heating, ventilation, air conditioning (HVAC), equipment, and other operations. However, energy consumption varies according to weather, occupancy, operating schedules, and seasonal conditions.
 
-1. **Problem Formulation**: Defined target as hourly electricity consumption ($kWh/h$) with a 24-hour day-ahead operational horizon.
-2. **Multi-Source Ingestion**: Ingested and audited 8,095,524 raw 15-minute building readings, 7,396,520 weather observations, calendar schedules, campus infrastructure, and maintenance logs.
-3. **Exploratory Data Analysis (EDA)**: Discovered a strong two-tier diurnal profile (noon peak at 12:00 PM, base trough at 02:00 AM), 15.9% weekend setback drop, and summer cooling degree peaks in February.
-4. **Data Cleansing**: Rectified 8,493 negative readings (0.105% sensor calibration artifacts), capped statistical anomalies, and normalized hours with missing 15-minute pulses.
-5. **Seasonal & Calendar Analysis**: Uncovered HVAC cooling inflection thresholds exceeding 24°C and high base-load ratios in library and mixed-use facilities.
-6. **Leakage-Free Feature Engineering**: Created strictly forward-available predictors using $t \ge 24h$ autoregressive lags (`lag_24`, `lag_48`, `lag_168`), shifted rolling windows, cyclical trigonometric encoders, and thermal degree hours.
-7. **Chronological Splitting**: Enforced strict forward-in-time partitioning (Train: 2018–mid 2021 [1.68M rows], Validation: late 2021 [233K rows], Test: 2022 [142K rows]). Shuffling was strictly prohibited.
-8. **Model Development**: Benchmarked Seasonal Naive baseline, Ridge Regression, Random Forest, XGBoost, and LightGBM.
-9. **Time-Series Cross Validation (CV)**: Validated temporal stability across 3 expanding-window folds ($R^2 = 0.9388 \pm 0.019$, $MAE = 6.27 \pm 0.18$ kWh).
-10. **Quantitative Evaluation**: Evaluated using MAE, RMSE, $R^2$, and MAPE on unseen future observations.
-11. **Trend & Anomaly Interpretation**: Quantified basal overnight floor loads (~40 kWh/h) and midday heatwave surges.
-12. **Evidence-Based Energy Optimization**: Formulated 4 strategic energy management pillars (thermal pre-cooling, overnight setback automation, calendar BMS synchronization, and DCV retrofits).
-13. **Model & Artifact Persistence**: Serialized fitted boosters, TreeExplainer, scaler, and metadata into compact `models/` artifacts.
-14. **Streamlit Intelligence Dashboard**: Developed an interactive dashboard with 6 specialized views (Executive Overview, Live Forecast, EDA, Leaderboard, SHAP Explainability, and Sustainability).
-15. **Integration & Automated Testing**: Validated pipelines via `tests/test_pipeline.py` (6/6 tests passing) and `src/audit_pipeline.py`.
-16. **Deployment Packaging**: Packaged dependencies in `requirements.txt`, documented configurations, and verified local daemon execution on port 8502.
-17. **Documentation & Limitations**: Formulated comprehensive documentation of assumptions, sensor boundaries, and operational sustainability impacts.
+Without reliable forecasting, facility managers may struggle to anticipate demand peaks, identify unnecessary overnight consumption, and plan energy management strategies effectively.
 
----
+Traditional monitoring systems primarily report historical consumption and may not provide sufficient predictive insights.
 
-## 🏆 Model Performance & Evaluation Leaderboard
+**The problem is to develop a data-driven system that forecasts hourly electricity consumption from historical energy and relevant contextual information, evaluates forecasting accuracy, explains the factors influencing predictions, and presents actionable insights through an interactive dashboard.**
 
-All models were evaluated on the forward-in-time test set (January 1, 2022 – April 30, 2022, 142,426 records):
+## 3. Project Objectives
 
-| Model Architecture | Val MAE (kWh) | Val RMSE (kWh) | Val $R^2$ | Test MAE (kWh) | Test RMSE (kWh) | Test $R^2$ | Test MAPE (%) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **LightGBM Champion** | **5.3386** | **11.1538** | **0.9422** | **6.3344** | **12.7149** | **0.9371** | **22.32%** |
-| **XGBoost Regressor** | 5.2900 | 11.2663 | 0.9411 | 6.3934 | 12.9567 | 0.9347 | 22.15% |
-| **Random Forest** | 5.4201 | 11.8615 | 0.9347 | 6.4674 | 13.4899 | 0.9292 | 20.67% |
-| **Ridge Regression** | 6.8849 | 12.7843 | 0.9241 | 7.8803 | 14.5850 | 0.9172 | 36.47% |
-| **Seasonal Naive Baseline** | 8.3115 | 17.9650 | 0.8501 | 10.4358 | 21.8000 | 0.8151 | 33.47% |
+- Analyze historical electricity consumption across multiple buildings.
+- Identify daily, weekly, and seasonal consumption patterns.
+- Process missing, invalid, and abnormal energy readings.
+- Integrate relevant weather, calendar, and time-based information where available.
+- Engineer features suitable for time-series forecasting.
+- Train and compare multiple machine learning models.
+- Evaluate forecasting performance using appropriate regression metrics.
+- Apply SHAP-based explainability to understand important prediction drivers.
+- Develop an interactive dashboard for exploring energy data and forecasts.
+- Generate potential energy management recommendations supported by data analysis.
 
-### Metric Descriptions & Operational Value:
-- **MAE (Mean Absolute Error)**: Measures average operational forecast deviation ($6.33$ kWh vs average facility load of ~52 kWh, representing a <12% relative error).
-- **RMSE (Root Mean Squared Error)**: Heavily penalizes large prediction spikes ($12.71$ kWh), critical for preventing costly peak-demand tariff penalties on campus substations.
-- **$R^2$ (Coefficient of Determination)**: Captures 93.7% of total variance across 64 distinct building micro-climates and usage profiles.
+## 4. Dataset Description
 
----
+The project uses the **UNICON Smart Building Energy & Utilities dataset**, as identified in the project specification.
 
-## 🧠 Explainable AI (TreeSHAP) Insights
+The dataset supports the analysis of electricity consumption across multiple building meters and the investigation of relationships between energy usage, time, weather, and operational patterns.
 
-Top predictive drivers identified by game-theoretic TreeSHAP feature attribution:
-1. `lag_24` (Mean $|SHAP| = 18.68$ kWh): Yesterday's consumption at the exact same hour provides the primary baseline anchor.
-2. `rolling_mean_24h_lag24` (Mean $|SHAP| = 7.95$ kWh): Represents the recent thermal and operational equilibrium of the facility.
-3. `lag_168` (Mean $|SHAP| = 7.11$ kWh): Identical hour from the previous week, encoding recurring weekly scheduling patterns.
-4. `is_business_hours` (Mean $|SHAP| = 1.53$ kWh): Binary indicator of active occupancy and lighting schedules.
-5. `air_temperature` & `apparent_temperature`: Non-linear scaling during cooling-degree hours ($>24^\circ$C).
+### Data categories
 
-> **Important Distinction**: SHAP attribution quantifies mathematical feature importance inside the model. While features exhibit strong predictive influence, physical causation is governed by building thermodynamic laws and HVAC control loops.
+| Data category | Purpose |
+|---|---|
+| Electricity consumption readings | Define the forecasting target and analyze demand patterns. |
+| Timestamp information | Identify hourly, daily, weekly, and seasonal behavior. |
+| Weather observations | Investigate the relationship between environmental conditions and electricity demand. |
+| Calendar information | Capture weekday, weekend, holiday, and academic schedule effects where available. |
+| Building metadata | Support analysis across different facilities and building types where available. |
+| Maintenance and operational information | Provide additional context when these records are available and integrated. |
 
----
+### Data preparation
 
-## 💡 Evidence-Based Energy Optimization Recommendations
+The data preparation process may include:
 
-1. **Overnight Base Load Automation**:
-   - *Evidence*: Unoccupied nighttime demand (01:00–04:00) averages 38.6 kWh/h (72.8% of midday peak).
-   - *Action*: Implement smart scheduling and automated submeter branch disconnects for non-essential plug loads and emergency lighting overrides.
-2. **Thermal Pre-Cooling & Peak Shaving**:
-   - *Evidence*: Heatwave days ($>30^\circ$C) cause a 14.2% surge in cooling power compared to baseline days.
-   - *Action*: Use day-ahead predictions to pre-cool thermal mass during cooler dawn hours (05:00–07:30) before peak grid tariff pricing.
-3. **Dynamic Academic Calendar Setback**:
-   - *Evidence*: Weekends drop by 15.9%, yet some teaching halls retain active HVAC runtime during semester breaks.
-   - *Action*: Synchronize BMS setpoints with academic exam and vacation calendars to expand temperature deadbands ($19^\circ\text{C} - 26^\circ\text{C}$) during vacancies.
+1. Inspecting dataset structure, columns, data types, and time coverage.
+2. Converting timestamps into a consistent datetime format.
+3. Identifying duplicate records and missing observations.
+4. Checking negative, invalid, and abnormal electricity readings.
+5. Aligning energy and weather data by timestamp and relevant building identifiers.
+6. Handling missing values using appropriate, documented methods.
+7. Resampling or aggregating readings to the required hourly resolution.
+8. Validating the resulting dataset before model training.
 
----
+The exact preprocessing methods depend on the available columns and the implemented pipeline. Negative readings and statistical outliers should be investigated before removal or modification because some unusual values may represent genuine operating events.
 
-## 🚀 Installation & Local Execution
+## 5. Proposed System
 
-### 1. Clone & Set Up Environment
+EnergiSense AI follows an end-to-end machine learning workflow:
+
+**Data Collection → Data Preprocessing → Exploratory Analysis → Feature Engineering → Time-Series Splitting → Model Training → Model Evaluation → Explainable AI → Forecasting Dashboard → Energy Insights**
+
+### System components
+
+- **Data Processing:** Cleans, transforms, and prepares the energy dataset.
+- **Exploratory Data Analysis:** Examines consumption patterns, weather relationships, and temporal variations.
+- **Feature Engineering:** Generates time-based, lagged, rolling, and weather-related features where appropriate.
+- **Forecasting Engine:** Trains and evaluates candidate machine learning models.
+- **Explainable AI:** Uses SHAP to interpret the contribution of model features.
+- **Interactive Dashboard:** Displays historical trends, predictions, evaluation metrics, and optimization opportunities.
+
+## 6. End-to-End Workflow: 17 Steps
+
+### Phase 1: Problem Understanding and Data Preparation
+
+**Step 1 — Problem Formulation**
+
+Define hourly electricity consumption as the prediction target and establish the forecasting horizon and evaluation objectives.
+
+**Step 2 — Data Collection and Ingestion**
+
+Load the available electricity consumption data and relevant weather, calendar, building, and operational datasets.
+
+**Step 3 — Exploratory Data Analysis**
+
+Examine consumption distributions, peak demand periods, daily patterns, weekday and weekend differences, and relationships with weather conditions.
+
+**Step 4 — Data Cleaning**
+
+Identify missing readings, duplicate records, invalid values, and potential sensor anomalies. Apply documented cleaning and imputation methods.
+
+**Step 5 — Seasonal and Calendar Analysis**
+
+Investigate hourly, daily, weekly, and seasonal patterns to understand how building operations and environmental conditions relate to electricity consumption.
+
+### Phase 2: Feature Engineering and Model Development
+
+**Step 6 — Feature Engineering**
+
+Create relevant predictors, such as:
+
+- Hour of day and day of week
+- Weekend and calendar indicators
+- Lagged electricity consumption
+- Historical rolling statistics
+- Temperature-related features
+- Cyclical time encodings
+
+Only information available at the forecast creation time should be used. Rolling windows and lag features must be shifted appropriately to prevent future-data leakage.
+
+**Step 7 — Chronological Data Splitting**
+
+Divide the data into training, validation, and test periods in chronological order. This simulates forecasting future observations from historical data.
+
+**Step 8 — Model Development**
+
+Train and compare suitable forecasting models, including:
+
+- Seasonal Naive Baseline
+- Ridge Regression
+- Random Forest Regressor
+- XGBoost Regressor
+- LightGBM Regressor
+
+The final model selection should be based on measured validation performance and operational suitability.
+
+**Step 9 — Time-Series Cross-Validation**
+
+Evaluate model stability using chronological cross-validation, where each validation period follows its corresponding training period.
+
+**Step 10 — Model Evaluation**
+
+Measure forecasting performance using:
+
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- Coefficient of Determination (R²)
+- Mean Absolute Percentage Error (MAPE), where appropriate
+
+### Phase 3: Interpretation and Deployment
+
+**Step 11 — Consumption Trend Interpretation**
+
+Analyze predicted demand, peak periods, overnight consumption, and differences across available building categories.
+
+**Step 12 — Energy Optimization Insights**
+
+Develop potential recommendations using observed consumption patterns, forecast results, and relevant operating conditions.
+
+**Step 13 — Model Persistence**
+
+Save the trained model, feature metadata, and required serving artifacts so that the application can load them without repeating the full training process.
+
+**Step 14 — Dashboard Development**
+
+Build an interactive Streamlit dashboard to present energy consumption, forecasts, model performance, and explainability results.
+
+**Step 15 — Integration and Testing**
+
+Test data processing, feature generation, model loading, prediction generation, and dashboard functionality.
+
+**Step 16 — Deployment Preparation**
+
+Configure dependencies, repository files, application entry points, and deployment settings for the intended hosting environment.
+
+**Step 17 — Documentation and Sustainability Assessment**
+
+Document the problem, dataset, methodology, evaluation results, assumptions, limitations, and potential applications in sustainable building management.
+
+## 7. Machine Learning Models
+
+The project compares different approaches to understand which model provides the most suitable forecasting performance.
+
+| Model | Purpose |
+|---|---|
+| Seasonal Naive | Establishes a simple historical-pattern baseline. |
+| Ridge Regression | Provides a regularized linear regression benchmark. |
+| Random Forest | Captures nonlinear relationships using an ensemble of decision trees. |
+| XGBoost | Applies gradient boosting to learn complex feature relationships. |
+| LightGBM | Provides an efficient gradient-boosted tree approach for tabular forecasting data. |
+
+### Champion model
+
+LightGBM is identified as the candidate champion model in the project specification.
+
+Its final designation should be supported by reproducible validation results. The selected model should then be evaluated on an untouched chronological test set.
+
+### Evaluation metrics
+
+**MAE:** Measures the average absolute difference between actual and predicted consumption.
+
+**RMSE:** Gives greater weight to large prediction errors.
+
+**R²:** Measures how much variation in the target is explained by the model relative to a mean-prediction baseline.
+
+**MAPE:** Expresses absolute errors as percentages. It can be misleading when actual consumption is zero or close to zero, so it should be interpreted alongside MAE and RMSE.
+
+Model performance should be evaluated on comparable observations and reported with the relevant validation or test period clearly identified.
+
+## 8. Explainable AI Using SHAP
+
+EnergiSense AI incorporates SHAP (SHapley Additive exPlanations) to help explain the predictions produced by tree-based machine learning models.
+
+SHAP assigns feature contributions to individual predictions relative to a model-specific reference value.
+
+### Explainability objectives
+
+- Identify the features that contribute most to model predictions.
+- Examine the importance of historical consumption.
+- Understand how time-based features influence predicted demand.
+- Investigate the relationship between weather conditions and consumption.
+- Explain individual predictions through feature contribution analysis.
+
+### Potential explainability visualizations
+
+Depending on the implemented dashboard, the explainability module can include:
+
+- Global feature importance plots
+- SHAP summary or beeswarm plots
+- Feature dependence plots
+- Local prediction waterfall plots
+
+**Important:** SHAP values explain how a model uses its inputs. They do not establish that a feature physically causes a change in electricity consumption.
+
+## 9. Energy Optimization Opportunities
+
+Forecasts and consumption analytics can help facility managers investigate potential improvements in building energy management.
+
+### 1. Overnight Base-Load Analysis
+
+**Objective:** Identify buildings or periods with consistently high overnight electricity consumption.
+
+**Potential action:** Investigate equipment schedules, standby loads, HVAC operating hours, and unnecessary consumption.
+
+### 2. Peak-Demand Planning
+
+**Objective:** Anticipate periods of elevated electricity demand.
+
+**Potential action:** Evaluate scheduling changes, equipment coordination, and load-shifting opportunities where operational requirements permit.
+
+### 3. Weather-Aware Energy Management
+
+**Objective:** Understand how temperature and other available weather variables relate to electricity consumption.
+
+**Potential action:** Investigate HVAC schedules and temperature setpoints while maintaining occupant comfort and safety requirements.
+
+### 4. Calendar-Based Scheduling
+
+**Objective:** Compare energy consumption during weekdays, weekends, holidays, and academic breaks where calendar information is available.
+
+**Potential action:** Align building operating schedules with actual occupancy and planned activities.
+
+These are potential optimization strategies, not guaranteed energy savings. Actual savings and emissions reductions require suitable baselines, verified implementation, and post-intervention measurement.
+
+## 10. EnergiSense AI Dashboard
+
+The Streamlit dashboard is intended to make forecasting results accessible to users who may not work directly with machine learning code.
+
+### Dashboard modules
+
+| Module | Purpose |
+|---|---|
+| Executive Overview | Summarizes energy consumption, key indicators, and major trends. |
+| Interactive Forecast | Allows users to explore available forecasting outputs. |
+| Exploratory Analytics | Displays consumption patterns and relationships in the data. |
+| Model Benchmarking | Compares forecasting models using evaluation metrics. |
+| Explainable AI (SHAP) | Presents feature importance and prediction explanations. |
+| Energy Optimization | Displays potential energy management insights and recommendations. |
+
+The final README should describe only the pages and interactive features implemented in the current application.
+
+## 11. Technology Stack
+
+| Technology | Application |
+|---|---|
+| Python | Core programming language |
+| Pandas | Data manipulation and preprocessing |
+| NumPy | Numerical operations |
+| Matplotlib / Seaborn | Data visualization, where used |
+| Scikit-learn | Preprocessing, baseline models, and evaluation |
+| LightGBM | Gradient-boosted tree forecasting |
+| XGBoost | Alternative gradient-boosting model |
+| SHAP | Model explainability |
+| Streamlit | Interactive web dashboard |
+| Joblib | Model and artifact persistence, where used |
+| Git and GitHub | Version control and source code management |
+
+The installed versions and actual dependencies should be taken from the project's `requirements.txt`.
+
+## 12. Project Structure
+
+The following is an illustrative structure. Adjust it to match the actual repository.
+
+```text
+Intelligent-Energy-Forecasting/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── .gitignore
+│
+├── data/
+│   └── README.md
+│
+├── models/
+│   └── lightgbm_forecaster.joblib
+│
+├── outputs/
+│   └── dashboard_data.parquet
+│
+├── src/
+│   └── audit_pipeline.py
+│
+├── tests/
+│   └── test_pipeline.py
+│
+└── assets/
+    └── dashboard visualizations
+```
+
+Large raw datasets and training artifacts may be excluded from version control. If they are required for training or serving, document how to obtain or generate them.
+
+## 13. Installation and Local Execution
+
+### Prerequisites
+
+- Python version compatible with the project dependencies
+- Git
+- Required dataset files or prepared serving artifacts
+
+### Step 1: Clone the repository
+
 ```bash
-git clone https://github.com/your-org/Intelligent-Energy-Forecasting.git
+git clone https://github.com/harshithperumalla/Intelligent-Energy-Forecasting.git
 cd Intelligent-Energy-Forecasting
+```
 
+### Step 2: Create a virtual environment
+
+**Windows:**
+
+```bash
 python -m venv venv
-venv\Scripts\activate      # Windows
-# source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate
+```
 
+**Linux/macOS:**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Step 3: Install dependencies
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 2. Run Automated Verification Tests
+### Step 4: Run the application
+
+```bash
+python -m streamlit run app.py
+```
+
+Open the local address displayed in the terminal. Streamlit commonly uses port `8501` by default, but the actual port may differ if it is already occupied or explicitly configured.
+
+### Step 5: Run tests
+
+If the repository includes the stated test and audit scripts, run:
+
 ```bash
 python -m unittest tests/test_pipeline.py
 python src/audit_pipeline.py
 ```
 
-### 3. Launch the Streamlit Intelligence Platform
-```bash
-python -m streamlit run app.py
-```
-Open your browser at `http://localhost:8501` (or `http://localhost:8502`).
+Successful execution depends on the test configuration, dependencies, and availability of any required input files.
 
----
+## 14. Deployment
 
-## ☁️ Streamlit Community Cloud Deployment Guide
+The application can be prepared for deployment using Streamlit Community Cloud or another compatible hosting platform.
 
-1. **Repository Footprint**: The repository is optimized at **~35 MB total** (well under GitHub's 100 MB file limit and 2 GB repo limit).
-   - `.gitignore` automatically excludes heavy raw datasets (>1 GB CSVs) and offline training parquets while preserving the lightweight serving cache (`outputs/dashboard_data.parquet` [9.98 MB]), production model weights (`models/lightgbm_forecaster.joblib` [3.23 MB]), metadata, and visuals.
-2. **Push to GitHub**:
-   ```bash
-   git add .
-   git commit -m "feat: EnergiSense AI production deployment package"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/Intelligent-Energy-Forecasting.git
-   git push -u origin main
-   ```
-3. **Deploy on Streamlit Community Cloud**:
-   - Navigate to [share.streamlit.io](https://share.streamlit.io/) and authorize your GitHub account.
-   - Click **New app** and select:
-     - **Repository**: `<your-username>/Intelligent-Energy-Forecasting`
-     - **Branch**: `main`
-     - **Main file path**: `app.py`
-   - Click **Deploy!**. Streamlit Cloud will install `requirements.txt` and boot the dashboard in under 30 seconds.
+For Streamlit Community Cloud:
 
----
+1. Push the project to GitHub.
+2. Open [Streamlit Community Cloud](https://share.streamlit.io/).
+3. Connect the relevant GitHub account.
+4. Create a new application.
+5. Select the repository and branch.
+6. Set `app.py` as the main application file.
+7. Deploy and inspect the application logs.
 
-## ⚠️ Limitations & Boundary Conditions
+Before deployment, verify that:
 
-- **Tariff Data Absence**: The dataset does not provide actual utility tariff billing structures (e.g. dynamic time-of-use rates or demand ratchets). Monetary savings must not be claimed without contractual utility rate sheets.
-- **Weather Projections**: Real-time forward forecasting in production relies on third-party meteorological API weather forecasts (e.g. Open-Meteo / BOM) which carry independent forecast uncertainty.
-- **Physical Envelope Metadata**: Several buildings in the metadata table lack gross floor area or built year records; median imputation was utilized to ensure cross-building generalization.
+- `requirements.txt` contains compatible dependencies.
+- All required model artifacts are included or generated during startup.
+- The application does not depend on local files excluded from Git.
+- File paths work in the cloud environment.
+- The application can start without requiring the full training dataset, unless that is intentional.
+
+**Deployment status:** Update this section with the public application URL only after a successful deployment has been confirmed.
+
+## 15. Limitations
+
+- **Data quality:** Missing observations, meter faults, and measurement errors can affect model reliability.
+- **Forecast uncertainty:** Prediction accuracy may change across buildings, seasons, and unusual operating conditions.
+- **Weather uncertainty:** Forecasts that rely on future weather data are subject to the uncertainty of the weather forecast source.
+- **Building differences:** Variations in occupancy, floor area, equipment, and operating schedules can affect generalization.
+- **Tariff limitations:** Financial savings cannot be reliably calculated without applicable electricity tariffs and demand-charge structures.
+- **Explainability limitations:** Feature attribution describes model behavior but does not prove physical causation.
+- **Operational validation:** Recommendations must be assessed against building-specific constraints before implementation.
+- **Sustainability measurement:** Actual energy savings and emissions reductions require appropriate baseline comparisons and post-implementation measurements.
+
+## 16. Expected Outcomes
+
+The project is designed to provide:
+
+- Forecasts of hourly electricity consumption.
+- Better visibility into daily, weekly, and seasonal demand patterns.
+- Quantitative comparisons of candidate forecasting models.
+- Explainable predictions using feature attribution.
+- Identification of periods that may warrant further energy investigation.
+- An interactive interface for reviewing energy data and model outputs.
+- A foundation for future integration with building management systems and operational optimization tools.
+
+These are intended outcomes. Their successful achievement should be demonstrated through the implemented application and its evaluation results.
+
+## 17. Future Enhancements
+
+Potential future improvements include:
+
+- Integration with live smart-meter data.
+- Automated weather forecast ingestion.
+- Building-specific forecasting models.
+- Uncertainty intervals for future predictions.
+- Forecast monitoring and model drift detection.
+- Integration with building management systems.
+- Tariff-aware demand optimization.
+- Measurement and verification of energy-saving interventions.
+- Carbon-emissions estimation using suitable emissions factors.
+
+## 18. Conclusion
+
+EnergiSense AI combines time-series analysis, machine learning, explainable AI, and interactive visualization to support intelligent electricity consumption forecasting for smart buildings.
+
+By transforming historical energy data into forecasts and interpretable insights, the project provides a foundation for more informed energy planning and building management.
+
+The system's practical value ultimately depends on reliable data, leakage-free evaluation, reproducible model performance, and validation of proposed interventions in real operating environments.
+
+## License
+
+This project is distributed under the MIT License if the repository includes the corresponding MIT license terms. See the repository's `LICENSE` file for the applicable conditions.
