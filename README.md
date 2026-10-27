@@ -38,6 +38,33 @@ Traditional monitoring systems primarily report historical consumption and may n
 - Apply SHAP-based explainability to understand important prediction drivers.
 - Develop an interactive dashboard for exploring energy data and forecasts.
 - Generate potential energy management recommendations supported by data analysis.
+## 🌐 Live Project Demo
+
+**EnergiSense AI — Intelligent Energy Consumption Forecasting for Smart Buildings** is deployed using Streamlit Community Cloud.
+
+🔗 **Live Dashboard:** https://intelligent-energy-forecasting-9j4smq7udtbzvqtf4at7p8.streamlit.app/
+
+Explore the interactive dashboard to examine building energy consumption, forecast future electricity demand, compare machine learning models, understand prediction drivers using Explainable AI, and review potential energy optimization opportunities.
+
+### Dashboard Features
+
+- **Executive Overview:** Review key energy consumption indicators and building-level insights.
+- **Interactive Forecast:** Explore electricity demand forecasts for selected building meters and forecasting horizons.
+- **Exploratory Analytics:** Investigate consumption patterns and temporal trends.
+- **Model Benchmarking:** Compare the performance of forecasting models using evaluation metrics.
+- **Explainable AI (SHAP):** Examine feature importance and understand factors influencing model predictions.
+- **Energy Optimization:** Explore data-driven recommendations for improving building energy management.
+
+### Deployment Technology
+
+- Python
+- Streamlit
+- LightGBM
+- SHAP
+- GitHub
+- Streamlit Community Cloud
+
+**Note:** Forecasts and optimization recommendations are analytical outputs. Actual energy savings depend on building conditions, implementation, and subsequent measurement.
 
 ## 4. Dataset Description
 
