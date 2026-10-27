@@ -1,0 +1,43 @@
+{
+  "hourly_diurnal_peak_hour": 12,
+  "hourly_diurnal_trough_hour": 2,
+  "weekday_mean_kwh": 54.270081161489465,
+  "weekend_mean_kwh": 45.642898551743016,
+  "weekend_reduction_pct": 15.896756417361644,
+  "category_ranking": {
+    "library": {
+      "mean": 173.70291365176152,
+      "count": 61992
+    },
+    "office": {
+      "mean": 66.21735197450637,
+      "count": 112028
+    },
+    "mixed use": {
+      "mean": 57.11627765016432,
+      "count": 915264
+    },
+    "sport": {
+      "mean": 41.10798272271122,
+      "count": 71348
+    },
+    "other": {
+      "mean": 40.30314433264938,
+      "count": 399640
+    },
+    "teaching": {
+      "mean": 39.23382815005792,
+      "count": 309907
+    },
+    "residence": {
+      "mean": 31.26763095951227,
+      "count": 159925
+    },
+    "leased": {
+      "mean": 11.887767008315606,
+      "count": 36197
+    }
+  },
+  "highest_consumption_month": "February",
+  "lowest_consumption_month": "April"
+}

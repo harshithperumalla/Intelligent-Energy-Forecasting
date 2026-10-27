@@ -1,0 +1,69 @@
+{
+  "item_1_model_loaded": {
+    "status": "PASS",
+    "model_type": "<class 'lightgbm.basic.Booster'>",
+    "feature_count": 37,
+    "best_iteration": 600
+  },
+  "item_2_test_evaluation": {
+    "status": "PASS",
+    "test_rows": 142426,
+    "test_date_range": "2022-01-01 00:00:00 to 2022-04-30 23:00:00",
+    "MAE": 6.3344,
+    "RMSE": 12.7149,
+    "R2": 0.9371,
+    "MAPE_pct": 22.32
+  },
+  "item_3_leakage_audit": {
+    "status": "PASS",
+    "safe_lags_ge_24h": true,
+    "rolling_shifted_by_24h": true,
+    "no_sub_24h_target_lags": true,
+    "chronological_split_verified": true,
+    "no_random_train_test_shuffle": true
+  },
+  "item_4_shap_verification": {
+    "status": "PASS",
+    "top_features": [
+      {
+        "feature": "lag_24",
+        "mean_abs_shap": 18.683376725141866
+      },
+      {
+        "feature": "rolling_mean_24h_lag24",
+        "mean_abs_shap": 7.954595498037728
+      },
+      {
+        "feature": "lag_168",
+        "mean_abs_shap": 7.111948280671111
+      },
+      {
+        "feature": "lag_48",
+        "mean_abs_shap": 2.2155983397078565
+      },
+      {
+        "feature": "is_business_hours",
+        "mean_abs_shap": 1.5325845368077908
+      }
+    ],
+    "beeswarm_plot_exists": true,
+    "waterfall_plots_exist": true
+  },
+  "item_5_interactive_forecast": {
+    "status": "PASS",
+    "horizon_rows": 24,
+    "min_forecast_kwh": 23.71,
+    "max_forecast_kwh": 57.94
+  },
+  "item_6_optimization_insights": {
+    "status": "PASS",
+    "recommendation_count": 4,
+    "pillars": [
+      "Overnight Basal Load Optimization",
+      "Pre-Cooling & Thermal Load Shifting",
+      "Dynamic Weekend & Semester Setback",
+      "High-Consumption Facility Retrofit Prioritization"
+    ],
+    "no_fabricated_tariffs": true
+  }
+}

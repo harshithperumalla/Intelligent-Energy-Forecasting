@@ -1,0 +1,143 @@
+{
+  "operational_metrics": {
+    "overnight_base_load_mean_kwh": 43.99,
+    "midday_peak_demand_mean_kwh": 61.6,
+    "base_load_to_peak_ratio_pct": 71.41,
+    "weekday_average_kwh": 54.3,
+    "weekend_average_kwh": 45.66,
+    "weekend_setback_reduction_pct": 15.92,
+    "mild_weather_average_kwh": 53.83,
+    "hot_weather_average_kwh": 59.71,
+    "weather_cooling_demand_increase_pct": 10.92
+  },
+  "top_5_consuming_buildings": [
+    {
+      "meter_id": 37,
+      "mean_kwh": 268.32634661654134,
+      "max_kwh": 467.5,
+      "p95_kwh": 416.5,
+      "overnight_mean": 230.53616934165234,
+      "category": "library",
+      "campus": "Bundoora",
+      "base_load_ratio": 85.9163374184444
+    },
+    {
+      "meter_id": 38,
+      "mean_kwh": 242.05707852940384,
+      "max_kwh": 434.25,
+      "p95_kwh": 358.5,
+      "overnight_mean": 198.68168108454313,
+      "category": "mixed use",
+      "campus": "Bundoora",
+      "base_load_ratio": 82.08050856914242
+    },
+    {
+      "meter_id": 39,
+      "mean_kwh": 150.29712763027197,
+      "max_kwh": 205.25,
+      "p95_kwh": 191.5,
+      "overnight_mean": 134.89063293710828,
+      "category": "teaching",
+      "campus": "Bundoora",
+      "base_load_ratio": 89.74930862879604
+    },
+    {
+      "meter_id": 30,
+      "mean_kwh": 146.34823116649827,
+      "max_kwh": 316.938,
+      "p95_kwh": 275.4975,
+      "overnight_mean": 113.3213517343611,
+      "category": "mixed use",
+      "campus": "Bundoora",
+      "base_load_ratio": 77.43267604337291
+    },
+    {
+      "meter_id": 23,
+      "mean_kwh": 134.53984274397803,
+      "max_kwh": 275.992,
+      "p95_kwh": 222.07750499999997,
+      "overnight_mean": 150.98989031502765,
+      "category": "office",
+      "campus": "Bundoora",
+      "base_load_ratio": 112.22689668394601
+    }
+  ],
+  "high_base_load_flagged_buildings": [
+    {
+      "meter_id": 36,
+      "mean_kwh": 25.931955393419948,
+      "max_kwh": 48.75,
+      "p95_kwh": 42.0,
+      "overnight_mean": 37.88080047109208,
+      "category": "mixed use",
+      "campus": "Bundoora",
+      "base_load_ratio": 146.07768637726434
+    },
+    {
+      "meter_id": 1,
+      "mean_kwh": 1.715534861820102,
+      "max_kwh": 3.616,
+      "p95_kwh": 3.187,
+      "overnight_mean": 2.2244785386029413,
+      "category": "other",
+      "campus": "Bundoora",
+      "base_load_ratio": 129.66676388277378
+    },
+    {
+      "meter_id": 2,
+      "mean_kwh": 2.149612443765385,
+      "max_kwh": 3.354,
+      "p95_kwh": 3.192,
+      "overnight_mean": 2.768319482917821,
+      "category": "other",
+      "campus": "Bundoora",
+      "base_load_ratio": 128.78225984162395
+    },
+    {
+      "meter_id": 20,
+      "mean_kwh": 97.83758286864429,
+      "max_kwh": 172.3333,
+      "p95_kwh": 151.25,
+      "overnight_mean": 115.23785645402177,
+      "category": "residence",
+      "campus": "Bundoora",
+      "base_load_ratio": 117.7848563662278
+    },
+    {
+      "meter_id": 23,
+      "mean_kwh": 134.53984274397803,
+      "max_kwh": 275.992,
+      "p95_kwh": 222.07750499999997,
+      "overnight_mean": 150.98989031502765,
+      "category": "office",
+      "campus": "Bundoora",
+      "base_load_ratio": 112.22689668394601
+    }
+  ],
+  "actionable_recommendations": [
+    {
+      "pillar": "Overnight Basal Load Optimization",
+      "finding": "Overnight base load (01:00-04:00) averages 44.0 kWh/h, representing 71.4% of peak daytime consumption even when buildings are largely unoccupied.",
+      "action": "Audit 24/7 continuous plug loads, emergency lighting overrides, and ventilation damper positions. Implement automated smart scheduling to de-energize non-critical circuits outside operating hours.",
+      "benefit": "Curtails unnecessary non-working hour electricity waste without disrupting occupant comfort."
+    },
+    {
+      "pillar": "Pre-Cooling & Thermal Load Shifting",
+      "finding": "Ambient temperatures above 30\u00b0C increase hourly building energy by 10.9% compared to mild baseline days (16-22\u00b0C), driving heavy midday chiller loads.",
+      "action": "Utilize day-ahead temperature forecasts from this model to initiate passive pre-cooling of building thermal mass during early morning hours (05:00-07:30) before external solar gain peaks.",
+      "benefit": "Flattens afternoon cooling peaks and mitigates high electrical demand spikes on campus substations."
+    },
+    {
+      "pillar": "Dynamic Weekend & Semester Setback",
+      "finding": "Weekend energy consumption drops by 15.9% on average, but variance across facilities shows some buildings maintain near-weekday baselines.",
+      "action": "Harmonize building management system (BMS) calendar triggers with university semester and exam schedules to enforce aggressive temperature deadband expansion (e.g. 19\u00b0C-26\u00b0C) when spaces are vacant.",
+      "benefit": "Reduces HVAC runtime across empty lecture halls and administrative offices during breaks."
+    },
+    {
+      "pillar": "High-Consumption Facility Retrofit Prioritization",
+      "finding": "Top consuming categories (Libraries and Mixed-Use Complexes) consume 2.5x to 4.4x the campus average, primarily driven by continuous mechanical ventilation requirements.",
+      "action": "Prioritize demand-controlled ventilation (DCV) retrofits using indoor CO2 sensors and variable frequency drives (VFDs) on air-handling units in high-footprint buildings.",
+      "benefit": "Enables air exchange rates to dynamically match actual occupant density rather than design maximums."
+    }
+  ]
+}

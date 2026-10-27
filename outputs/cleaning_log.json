@@ -1,0 +1,19 @@
+{
+  "total_records": 2066301,
+  "total_buildings": 64,
+  "total_campuses": 3,
+  "min_timestamp": "2018-01-01 00:00:00",
+  "max_timestamp": "2022-04-30 23:00:00",
+  "consumption_mean": 51.827975495244935,
+  "consumption_std": 59.847684931981455,
+  "consumption_min": 0.0,
+  "consumption_max": 467.5,
+  "consumption_median": 33.3125,
+  "cleaning_log": {
+    "total_raw_readings": 8095524,
+    "negative_readings_cleaned": 8493,
+    "extreme_spikes_capped": 0,
+    "total_hourly_records": 2066301
+  },
+  "elapsed_seconds": 71.16
+}

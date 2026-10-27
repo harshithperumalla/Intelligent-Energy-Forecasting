@@ -1,0 +1,222 @@
+{
+  "building_consumption.csv": {
+    "size_mb": 251.15,
+    "rows": 8095524,
+    "columns": [
+      "campus_id",
+      "meter_id",
+      "timestamp",
+      "consumption"
+    ],
+    "sample_dtypes": {
+      "campus_id": "int64",
+      "meter_id": "int64",
+      "timestamp": "object",
+      "consumption": "float64"
+    },
+    "date_column": "timestamp",
+    "date_range": "2019-03-29 01:15:00 to 2022-04-30 23:30:00"
+  },
+  "building_meta.csv": {
+    "size_mb": 0.0,
+    "rows": 64,
+    "columns": [
+      "campus_id",
+      "id",
+      "built_year",
+      "category",
+      "gross_floor_area",
+      "room_area",
+      "capacity"
+    ],
+    "sample_dtypes": {
+      "campus_id": "int64",
+      "id": "int64",
+      "built_year": "float64",
+      "category": "object",
+      "gross_floor_area": "float64",
+      "room_area": "float64",
+      "capacity": "float64"
+    },
+    "date_column": null,
+    "date_range": null
+  },
+  "building_submeter_consumption.csv": {
+    "size_mb": 113.26,
+    "rows": 1665162,
+    "columns": [
+      "building_id",
+      "id",
+      "campus_id",
+      "timestamp",
+      "consumption",
+      "current",
+      "voltage",
+      "power",
+      "power_factor"
+    ],
+    "sample_dtypes": {
+      "building_id": "int64",
+      "id": "int64",
+      "campus_id": "int64",
+      "timestamp": "object",
+      "consumption": "float64",
+      "current": "float64",
+      "voltage": "float64",
+      "power": "float64",
+      "power_factor": "float64"
+    },
+    "date_column": "timestamp",
+    "date_range": "2021-04-20 19:05:00+10:00 to 2021-11-08 11:30:00+11:00"
+  },
+  "calender.csv": {
+    "size_mb": 0.04,
+    "rows": 2312,
+    "columns": [
+      "date",
+      "is_holiday",
+      "is_semester",
+      "is_exam"
+    ],
+    "sample_dtypes": {
+      "date": "object",
+      "is_holiday": "float64",
+      "is_semester": "int64",
+      "is_exam": "int64"
+    },
+    "date_column": "date",
+    "date_range": "2016-01-01 to 2022-04-29"
+  },
+  "campus_meta.csv": {
+    "size_mb": 0.0,
+    "rows": 5,
+    "columns": [
+      "id",
+      "name",
+      "capacity"
+    ],
+    "sample_dtypes": {
+      "id": "int64",
+      "name": "object",
+      "capacity": "int64"
+    },
+    "date_column": null,
+    "date_range": null
+  },
+  "events.csv": {
+    "size_mb": 0.01,
+    "rows": 106,
+    "columns": [
+      "meter_id",
+      "event_type",
+      "date",
+      "event_description"
+    ],
+    "sample_dtypes": {
+      "meter_id": "int64",
+      "event_type": "object",
+      "date": "object",
+      "event_description": "object"
+    },
+    "date_column": "date",
+    "date_range": "2021-07-01 to 2020-03-14"
+  },
+  "gas_consumption.csv": {
+    "size_mb": 0.91,
+    "rows": 27164,
+    "columns": [
+      "campus_id",
+      "timestamp",
+      "consumption"
+    ],
+    "sample_dtypes": {
+      "campus_id": "int64",
+      "timestamp": "object",
+      "consumption": "float64"
+    },
+    "date_column": "timestamp",
+    "date_range": "2018-05-01 06:00:00 to 2021-12-28 06:00:00"
+  },
+  "nmi_consumption.csv": {
+    "size_mb": 167.42,
+    "rows": 3507076,
+    "columns": [
+      "campus_id",
+      "meter_id",
+      "timestamp",
+      "consumption",
+      "demand_kW",
+      "demand_kVA"
+    ],
+    "sample_dtypes": {
+      "campus_id": "float64",
+      "meter_id": "int64",
+      "timestamp": "object",
+      "consumption": "float64",
+      "demand_kW": "float64",
+      "demand_kVA": "float64"
+    },
+    "date_column": "timestamp",
+    "date_range": "2015-11-22 17:15:00 to 2022-04-29 12:15:00"
+  },
+  "nmi_meta.csv": {
+    "size_mb": 0.0,
+    "rows": 14,
+    "columns": [
+      "id",
+      "campus_id",
+      "peak_demand"
+    ],
+    "sample_dtypes": {
+      "id": "int64",
+      "campus_id": "int64",
+      "peak_demand": "float64"
+    },
+    "date_column": null,
+    "date_range": null
+  },
+  "water_consumption.csv": {
+    "size_mb": 7.7,
+    "rows": 245040,
+    "columns": [
+      "campus_id",
+      "meter_id",
+      "timestamp",
+      "consumption"
+    ],
+    "sample_dtypes": {
+      "campus_id": "int64",
+      "meter_id": "int64",
+      "timestamp": "object",
+      "consumption": "float64"
+    },
+    "date_column": "timestamp",
+    "date_range": "2021-01-10 00:00:00 to 2022-12-03 23:30:00"
+  },
+  "weather_data.csv": {
+    "size_mb": 366.33,
+    "rows": 7396520,
+    "columns": [
+      "campus_id",
+      "timestamp",
+      "apparent_temperature",
+      "air_temperature",
+      "dew_point_temperature",
+      "relative_humidity",
+      "wind_speed",
+      "wind_direction"
+    ],
+    "sample_dtypes": {
+      "campus_id": "int64",
+      "timestamp": "object",
+      "apparent_temperature": "float64",
+      "air_temperature": "float64",
+      "dew_point_temperature": "float64",
+      "relative_humidity": "float64",
+      "wind_speed": "float64",
+      "wind_direction": "float64"
+    },
+    "date_column": "timestamp",
+    "date_range": "2018-01-01 00:00:00 to 2022-04-30 23:00:00"
+  }
+}

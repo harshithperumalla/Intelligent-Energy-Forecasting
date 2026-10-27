@@ -1,0 +1,41 @@
+# Python bytecode & environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+venv/
+env/
+ENV/
+.venv/
+
+# Large raw datasets (all raw CSVs)
+data/*.csv
+!data/building_meta.csv
+!data/campus_meta.csv
+!data/calender.csv
+!data/events.csv
+
+# Large intermediate training parquets (not needed by Streamlit dashboard)
+data/*.parquet
+
+# Large offline benchmark models (>50MB, not used by dashboard)
+models/rf_forecaster.joblib
+
+# Keep required dashboard models and metadata
+!models/lightgbm_forecaster.joblib
+!models/xgboost_forecaster.joblib
+!models/shap_explainer.joblib
+!models/scaler.joblib
+!models/ridge_forecaster.joblib
+!models/feature_metadata.json
+
+# Keep dashboard serving data & evaluation outputs
+!outputs/dashboard_data.parquet
+!outputs/test_predictions.parquet
+
+# IDE & OS temporary files
+*.log
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,72 @@
+{
+  "Baseline_Seasonal_Naive": {
+    "Validation": {
+      "MAE": 8.3115,
+      "RMSE": 17.965,
+      "R2": 0.8501,
+      "MAPE_pct": 30.77
+    },
+    "Test": {
+      "MAE": 10.4358,
+      "RMSE": 21.8,
+      "R2": 0.8151,
+      "MAPE_pct": 33.47
+    }
+  },
+  "Ridge_Regression": {
+    "Validation": {
+      "MAE": 6.8849,
+      "RMSE": 12.7843,
+      "R2": 0.9241,
+      "MAPE_pct": 35.09
+    },
+    "Test": {
+      "MAE": 7.8803,
+      "RMSE": 14.585,
+      "R2": 0.9172,
+      "MAPE_pct": 36.47
+    }
+  },
+  "Random_Forest": {
+    "Validation": {
+      "MAE": 5.4201,
+      "RMSE": 11.8615,
+      "R2": 0.9347,
+      "MAPE_pct": 20.67
+    },
+    "Test": {
+      "MAE": 6.4674,
+      "RMSE": 13.4899,
+      "R2": 0.9292,
+      "MAPE_pct": 22.51
+    }
+  },
+  "LightGBM_Champion": {
+    "Validation": {
+      "MAE": 5.3386,
+      "RMSE": 11.1538,
+      "R2": 0.9422,
+      "MAPE_pct": 20.31
+    },
+    "Test": {
+      "MAE": 6.3344,
+      "RMSE": 12.7149,
+      "R2": 0.9371,
+      "MAPE_pct": 22.32
+    }
+  },
+  "XGBoost": {
+    "Validation": {
+      "MAE": 5.29,
+      "RMSE": 11.2663,
+      "R2": 0.9411,
+      "MAPE_pct": 19.89
+    },
+    "Test": {
+      "MAE": 6.3934,
+      "RMSE": 12.9567,
+      "R2": 0.9347,
+      "MAPE_pct": 22.15
+    }
+  }
+}

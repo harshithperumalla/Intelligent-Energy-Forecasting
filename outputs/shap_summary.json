@@ -1,0 +1,20 @@
+{
+  "top_5_features": [
+    "lag_24",
+    "rolling_mean_24h_lag24",
+    "lag_168",
+    "lag_48",
+    "is_business_hours"
+  ],
+  "top_feature_impacts": [
+    18.683376725141866,
+    7.954595498037728,
+    7.111948280671111,
+    2.2155983397078565,
+    1.5325845368077908
+  ],
+  "explanation_method": "TreeSHAP (TreeExplainer)",
+  "base_value_expected_kwh": 53.297658393286085,
+  "sample_instances_analyzed": 2500,
+  "elapsed_seconds": 34.4
+}
